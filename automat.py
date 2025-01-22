@@ -24,12 +24,11 @@ def generate_router_config(router):
             config.append(f"interface {interface['name']}")
             config.append(" no ip address")
             config.append(f" ipv6 address {interface['address']}")
-            config.append("!")
-            #automatically add fastethernet properties here 
-            config.append("interface FastEthernet0/0")
-            config.append("no ip address")
-            config.append("shutdown")
-            config.append("duplex full")
+            if interface['protocol']:
+                if interface['protocol'] == "ospf":
+                    config.append(" ipv6 ospf 1 area 1")
+                elif interface['protocol'] == "rip":
+                    config.append(" ipv6 rip RIP enable")
             config.append("!")
             
 
@@ -44,13 +43,18 @@ def generate_router_config(router):
                 config.append(" negotiation auto")
                 config.append(f" ipv6 address {interface['address']}")
                 config.append(" ipv6 enable")
-                config.append("!")  # Add a closing line
+                if interface['protocol']:
+                    if interface['protocol'] == "ospf":
+                        config.append(" ipv6 ospf 1 area 1")
+                    elif interface['protocol'] == "rip":
+                        config.append(" ipv6 rip RIP enable")
+                config.append("!")  
             else:  # If 'address' is False
                 config.append(f"interface {interface['name']}")
                 config.append(" no ip address")
                 config.append(" shutdown")
                 config.append(" negotiation auto")
-                config.append("!")  # Add a closing line
+                config.append("!")  
         
 
     # RIP ou OSPF
@@ -115,3 +119,4 @@ if __name__ == "__main__":
     intent_file_path = "project.json"  # Update with your JSON file path
     output_directory = "configs"      # Directory to store the router configs
     main(intent_file_path, output_directory)
+
