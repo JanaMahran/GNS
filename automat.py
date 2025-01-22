@@ -57,40 +57,22 @@ def generate_router_config(router):
                 config.append("!")  
         
 
-    # RIP ou OSPF
-    if router['igp'] == "RIP":
-        config.append("router rip")
-        config.append(" version 2")
-        config.append(" no auto-summary")
-        for interface in router['interfaces']:
-            if interface['address'] is not False:
-                config.append(f" network {interface['address'].split('/')[0]}")
-    elif router['igp'] == "OSPF":
-        config.append("router ospf 1")
-        if "ospf_area" in router:
-            area = router['ospf_area']
-        else:
-            area = "0"
-        for interface in router['interfaces']:
-            if interface['address'] is not False:
-                config.append(f" network {interface['address'].split('/')[0]} 0.0.0.0 area {area}")
-
-    # BGP
-    if isinstance(router['bgp'], dict):  # voir si instance bgp existe 
-        config.append(f"router bgp {router['bgp']['local_as']}")
-        config.append(" bgp log-neighbor-changes")
-        for neighbor in router['bgp']['neighbors']:
-            config.append(f" neighbor {neighbor['address']} remote-as {neighbor['remote_as']}")
-            if neighbor['relationship'] == "eBGP":
-                config.append(f" neighbor {neighbor['address']} description External Peer")
-    elif router['bgp'] == "iBGP":  # Simplified iBGP configuration
-        config.append(f"router bgp {router['as']}")
-        config.append(" bgp log-neighbor-changes")
-        config.append(" neighbor peer-group IBGP")
-        config.append(" neighbor IBGP remote-as router['as']")
-        config.append(" neighbor IBGP update-source Loopback0")
+    #bgp 
+    
+    config.append(f"router bgp {router['bgp']['local_as']}")
+    config.append(f" bgp router-id {router['bgp']['router_id']}")
+    config.append(" bgp log-neighbor-changes")
+    config.append(" no bgp default ipv4-unicast")
+    for neighbor in router['bgp']['neighbors']:
+        config.append(f" neighbor {neighbor['address']} remote-as {neighbor['remote_as']}")
+        if neighbor['relationship'] == "iBGP":
+            config.append(f" neighbor {neighbor['address']} update-source Loopback0")
+  
 
     config.append("!")
+
+    
+    
     return "\n".join(config)
 
 # Function to save configuration to a file
@@ -119,4 +101,3 @@ if __name__ == "__main__":
     intent_file_path = "project.json"  # Update with your JSON file path
     output_directory = "configs"      # Directory to store the router configs
     main(intent_file_path, output_directory)
-
