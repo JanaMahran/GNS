@@ -67,9 +67,27 @@ def generate_router_config(router):
         config.append(f" neighbor {neighbor['address']} remote-as {neighbor['remote_as']}")
         if neighbor['relationship'] == "iBGP":
             config.append(f" neighbor {neighbor['address']} update-source Loopback0")
-  
-
     config.append("!")
+    
+    config.append("address-family ipv4")
+    config.append("exit-address-family")
+    config.append("!")
+    
+    config.append("address-family ipv6") 
+    if "border" in router:  
+        if router['igp']=='RIP':
+            config.append("redistribute rip RIP")
+        elif router['igp']=='OSPF':
+            config.append(" redistribute ospf 1")
+        for border_entry in router["border"]:
+            network_address = border_entry["network"]
+            config.append(f" network {network_address}")
+        for neighbor in router['bgp']['neighbors']:
+            config.append(f" neighbor {neighbor['address']} activate")
+        config.append("exit-address-family")
+            
+        
+    
 
     
     
