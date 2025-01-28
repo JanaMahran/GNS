@@ -16,9 +16,58 @@ def load_intent_file(file_path):
 # pour generer la configuration d'un routeur 
 def generate_router_config(router):
     config = []
+    config.append("!")
+    config.append("!")
+    config.append("! Last configuration change at 11:22:51 UTC Wed Jan 22 2025")
+    config.append("!")
+    config.append("version 15.2")
+    config.append("service timestamps debug datetime msec")
+    config.append("service timestamps log datetime msec")
+    config.append("!")
     config.append(f"hostname {router['name']}")  # Set hostname
-
+    config.append("boot-start-marker")
+    config.append("boot-end-marker")
+    config.append("!")
+    config.append("no aaa new-model")
+    config.append("no ip icmp rate-limit unreachable")
+    config.append("ip cef")
+    config.append("!")
+    config.append("!")
+    config.append("!")
+    config.append("!")
+    config.append("!")
+    config.append("!")
+    config.append("no ip domain lookup")
+    config.append("ipv6 unicast-routing")
+    config.append("ipv6 cef")
+    config.append("!")
+    config.append("!")
+    config.append("multilink bundle-name authenticated")
+    config.append("!")
+    config.append("!")
+    config.append("!")
+    config.append("!")
+    config.append("!")
+    config.append("!")
+    config.append("!")
+    config.append("!")
+    config.append("!")
+    config.append("ip tcp synwait-time 5")
+    config.append("!")
+    config.append("!")
+    config.append("!")
+    config.append("!")
+    config.append("!")
+    config.append("!")
+    config.append("!")
+    config.append("!")
+    config.append("!")
+    config.append("!")
+    config.append("!")
+    config.append("!")
+    
     # loopback
+    config.append("!")
     for interface in router['interfaces']:
         if "Loopback" in interface['name']:
             config.append(f"interface {interface['name']}")
@@ -85,10 +134,57 @@ def generate_router_config(router):
         for neighbor in router['bgp']['neighbors']:
             config.append(f" neighbor {neighbor['address']} activate")
         config.append("exit-address-family")
-            
-        
-    
+    config.append("!")
+    config.append("ip forward-protocol nd")
+    config.append(" no ip http server")
+    config.append(" no ip http secure-server")
+    config.append("!")
+    config.append("!")
+    if "border" in router:
+        if router['igp']=='OSPF':
+            config.append("ipv6 router OSPF 1")
+            config.append(f" router-id {router['bgp']['router_id']}")
+            config.append(f" passive-interface {router['bgp']['border_interface']}")
+            config.append(f" redistribute bgp {router['as']}")
+            config.append("!")
+        elif router['igp']=='RIP':
+            config.append("ipv6 router rip RIP")
+            config.append(" redistribute connected")
+            config.append(f" redistribute bgp {router['as']}")
+            config.append(" redistribute connected")
+            config.append("!")
+    else:
+        if router['igp']=='OSPF':
+            config.append("ipv6 router ospf 1")
+            config.append(f" router-id {router['bgp']['router_id']}")
+            config.append("!")
+        if router['igp']=='RIP':
+            config.append("ipv6 router rip RIP")
+            config.append(" redistribute connected")
+            config.append("!")
+    config.append("!")
+    config.append("!")
+    config.append("!")
+    config.append("control-plane")
+    config.append("!")
+    config.append("!")
+    config.append("line con 0")
+    config.append(" exec-timeout 0 0")
+    config.append(" privilege level 15")
+    config.append(" logging synchronous")
+    config.append(" stopbits 1")
+    config.append("line aux 0")
+    config.append(" exec-timeout 0 0")
+    config.append(" privilege level 15")
+    config.append(" logging synchronous")
+    config.append(" stopbits 1")
+    config.append("line vty 0 4")
+    config.append(" login")
+    config.append("!")
+    config.append("!")
+    config.append("end")
 
+   
     
     
     return "\n".join(config)
