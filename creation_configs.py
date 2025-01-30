@@ -1,13 +1,6 @@
 import json
 import os
 
-
-#notes prof 
-#anoncer avec network statement 
-#un sous reseau qui advertise tout: pour les advertisement
-#ibgp dans tous les routeurs 
-
-
 # Function to load the JSON file
 def load_intent_file(file_path):
     with open(file_path, "r") as file:
@@ -16,6 +9,19 @@ def load_intent_file(file_path):
 # pour generer la configuration d'un routeur 
 def generate_router_config(router):
     config = []
+    
+    # Paramètres système essentiels (sont dans la startup config par défaut)
+    config.append("service timestamps debug datetime msec")
+    config.append("service timestamps log datetime msec")
+    config.append("no service password-encryption")
+    config.append("!")
+    config.append("ip cef")
+    config.append("no ip domain-lookup")
+    config.append("no ip icmp rate-limit unreachable")
+    config.append("ip tcp synwait 5")
+    config.append("no cdp log mismatch duplex")
+    config.append("!")
+    
     config.append(f"hostname {router['name']}")  # Set hostname
 
     # loopback
@@ -87,9 +93,22 @@ def generate_router_config(router):
         config.append("exit-address-family")
             
         
-    
+    # Configuration de la console (présent dans la startup config par défaut)
+    config.append("!")
+    config.append("line con 0")
+    config.append(" exec-timeout 0 0")
+    config.append(" logging synchronous")
+    config.append(" privilege level 15")
+    config.append(" no login")
+    config.append("!")
+    config.append("line aux 0")
+    config.append(" exec-timeout 0 0")
+    config.append(" logging synchronous")
+    config.append(" privilege level 15")
+    config.append(" no login")
+    config.append("!")
+    config.append("end")
 
-    
     
     return "\n".join(config)
 
@@ -116,6 +135,6 @@ def main(intent_file, output_dir):
 
 # Run the script
 if __name__ == "__main__":
-    intent_file_path = "project.json"  # Update with your JSON file path
+    intent_file_path = "project.json"  # Update with the JSON file path
     output_directory = "configs"      # Directory to store the router configs
     main(intent_file_path, output_directory)
