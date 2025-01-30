@@ -106,8 +106,7 @@ def generate_router_config(router):
                 config.append("!")  
         
 
-    #bgp 
-    
+    #bgp    
     config.append(f"router bgp {router['bgp']['local_as']}")
     config.append(f" bgp router-id {router['bgp']['router_id']}")
     config.append(" bgp log-neighbor-changes")
@@ -131,11 +130,38 @@ def generate_router_config(router):
         for border_entry in router["border"]:
             network_address = border_entry["network"]
             config.append(f" network {network_address}")
-    for neighbor in router['bgp']['neighbors']:
-        config.append(f" neighbor {neighbor['address']} activate")
+    if "border_comm" in router:  
+        for neighbor in router['bgp']['neighbors']:
+            config.append(f" neighbor {neighbor['address']} activate")
+            if neighbor['relationship'] == "iBGP":
+                config.append(f" neighbor {neighbor['address']} send-community")
+                config.append(f" neighbor {neighbor['address']} route-map comm out")
+                if neighbor['comm_in'] is True:
+                    config.append(f" neighbor {neighbor['address']} route-map comm2 in")
+            if neighbor['relationship'] == "eBGP":
+                config.append(f" neighbor {neighbor['address']} send-community")
+                config.append(f" neighbor {neighbor['address']} route-map comm in")
+                if neighbor['comm_in'] is True:
+                    config.append(f" neighbor {neighbor['address']} route-map comm2 in")
+                
+    else:
+        for neighbor in router['bgp']['neighbors']:
+            config.append(f" neighbor {neighbor['address']} activate")
+            if router['as']=="1":
+                if neighbor['send_community'] is True:
+                    config.append(f" neighbor {neighbor['address']} send-community")
+                    config.append(f" neighbor {neighbor['address']} route-map comm in")
+                
     config.append("exit-address-family")
     config.append("!")
     config.append("ip forward-protocol nd")
+    config.append("!")
+    config.append("ip bpg-community new-format")
+    
+    if "communities" in router:
+        for community in router['communities']:
+            config.append(f"ip community-list {community['community_name']} permit {community['permit']}")
+        config.append("!")
     config.append("no ip http server")
     config.append("no ip http secure-server")
     config.append("!")
@@ -160,6 +186,22 @@ def generate_router_config(router):
             config.append("ipv6 router rip RIP")
             config.append(" redistribute connected")
             config.append("!")
+            
+    if "border_comm" in router:
+         config.append(f"route-map comm permit {router['border_comm']['permit']}")
+         config.append(f" set local-preference {router['border_comm']['local_pref']}")
+         config.append(f" set community {router['border_comm']['set_comm_add']} additive")
+         config.append("!")
+    if "communities" in router:
+        for community in router['communities']:
+            config.append(f"route-map comm permit {community['community_name']}")
+            config.append(f" match community {community['community_name']}")
+            config.append(f" set local-preference {community['local_pref']}")
+            config.append("!")
+    config.append("route-map comm permit 40")
+                
+        
+            
     config.append("!")
     config.append("!")
     config.append("!")
