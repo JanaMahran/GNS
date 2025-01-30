@@ -131,13 +131,13 @@ def generate_router_config(router):
         for border_entry in router["border"]:
             network_address = border_entry["network"]
             config.append(f" network {network_address}")
-        for neighbor in router['bgp']['neighbors']:
-            config.append(f" neighbor {neighbor['address']} activate")
-        config.append("exit-address-family")
+    for neighbor in router['bgp']['neighbors']:
+        config.append(f" neighbor {neighbor['address']} activate")
+    config.append("exit-address-family")
     config.append("!")
     config.append("ip forward-protocol nd")
-    config.append(" no ip http server")
-    config.append(" no ip http secure-server")
+    config.append("no ip http server")
+    config.append("no ip http secure-server")
     config.append("!")
     config.append("!")
     if "border" in router:
@@ -149,8 +149,6 @@ def generate_router_config(router):
             config.append("!")
         elif router['igp']=='RIP':
             config.append("ipv6 router rip RIP")
-            config.append(" redistribute connected")
-            config.append(f" redistribute bgp {router['as']}")
             config.append(" redistribute connected")
             config.append("!")
     else:
