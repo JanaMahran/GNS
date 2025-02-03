@@ -2,10 +2,10 @@ import json
 import os
 
 
-#notes prof
-#anoncer avec network statement
+#notes prof 
+#anoncer avec network statement 
 #un sous reseau qui advertise tout: pour les advertisement
-#ibgp dans tous les routeurs
+#ibgp dans tous les routeurs 
 
 
 # Function to load the JSON file
@@ -13,7 +13,7 @@ def load_intent_file(file_path):
     with open(file_path, "r") as file:
         return json.load(file)
 
-# pour generer la configuration d'un routeur
+# pour generer la configuration d'un routeur 
 def generate_router_config(router):
     config = []
     config.append("!")
@@ -97,17 +97,16 @@ def generate_router_config(router):
                         config.append(" ipv6 ospf 1 area 1")
                     elif interface['protocol'] == "rip":
                         config.append(" ipv6 rip RIP enable")
-                config.append("!")
+                config.append("!")  
             else:  # If 'address' is False
                 config.append(f"interface {interface['name']}")
                 config.append(" no ip address")
                 config.append(" shutdown")
                 config.append(" negotiation auto")
-                config.append("!")
+                config.append("!")  
         
 
-    #bgp
-    
+    #bgp    
     config.append(f"router bgp {router['bgp']['local_as']}")
     config.append(f" bgp router-id {router['bgp']['router_id']}")
     config.append(" bgp log-neighbor-changes")
@@ -122,8 +121,8 @@ def generate_router_config(router):
     config.append("exit-address-family")
     config.append("!")
     
-    config.append("address-family ipv6")
-    if "border" in router:
+    config.append("address-family ipv6") 
+    if "border" in router:  
         if router['igp']=='RIP':
             config.append("redistribute rip RIP")
         elif router['igp']=='OSPF':
@@ -131,18 +130,39 @@ def generate_router_config(router):
         for border_entry in router["border"]:
             network_address = border_entry["network"]
             config.append(f" network {network_address}")
-    for neighbor in router['bgp']['neighbors']:
-        config.append(f" neighbor {neighbor['address']} activate")
+    if "border_comm" in router:  
+        for neighbor in router['bgp']['neighbors']:
+            config.append(f" neighbor {neighbor['address']} activate")
+            if neighbor['relationship'] == "iBGP":
+                config.append(f" neighbor {neighbor['address']} send-community both")
+            if neighbor['relationship'] == "eBGP":
+                config.append(f" neighbor {neighbor['address']} route-map comm in")
+                
+    else:
+        for neighbor in router['bgp']['neighbors']:
+            config.append(f" neighbor {neighbor['address']} activate")
+            if router['as']=="1":
+                if neighbor['send_community'] is True:
+                    config.append(f" neighbor {neighbor['address']} send-community both") #chage variable name 
+
+                
     config.append("exit-address-family")
     config.append("!")
     config.append("ip forward-protocol nd")
+    config.append("!")
+    config.append("ip bgp-community new-format")
+    
+    if "communities" in router:
+        for community in router['communities']:
+            config.append(f"ip community-list {community['community_name']} permit {community['permit']}")
+        config.append("!")
     config.append("no ip http server")
     config.append("no ip http secure-server")
     config.append("!")
     config.append("!")
     if "border" in router:
         if router['igp']=='OSPF':
-            config.append("ipv6 router OSPF 1")
+            config.append("ipv6 router ospf 1")
             config.append(f" router-id {router['bgp']['router_id']}")
             config.append(f" passive-interface {router['bgp']['border_interface']}")
             config.append(f" redistribute bgp {router['as']}")
@@ -160,6 +180,16 @@ def generate_router_config(router):
             config.append("ipv6 router rip RIP")
             config.append(" redistribute connected")
             config.append("!")
+            
+    if "border_comm" in router:
+         config.append(f"route-map comm permit {router['border_comm']['permit']}")
+         config.append(f" set local-preference {router['border_comm']['local_pref']}")
+         config.append(f" set community {router['border_comm']['set_comm_add']} additive")
+         config.append("!")
+
+                
+        
+            
     config.append("!")
     config.append("!")
     config.append("!")
