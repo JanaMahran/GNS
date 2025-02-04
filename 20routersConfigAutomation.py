@@ -130,13 +130,26 @@ def generate_router_config(router):
         for border_entry in router["border"]:
             network_address = border_entry["network"]
             config.append(f" network {network_address}")
-    if "border_comm" in router:  
-        for neighbor in router['bgp']['neighbors']:
-            config.append(f" neighbor {neighbor['address']} activate")
-            if neighbor['relationship'] == "iBGP":
-                config.append(f" neighbor {neighbor['address']} send-community both")
-            if neighbor['relationship'] == "eBGP":
-                config.append(f" neighbor {neighbor['address']} route-map comm in")
+    if "border_comm" in router:
+        if "filtres" in router:
+            for neighbor in router['bgp']['neighbors']:
+                config.append(f" neighbor {neighbor['address']} activate")
+                if neighbor['relationship'] == "iBGP":
+                    config.append(f" neighbor {neighbor['address']} send-community both")
+                if neighbor['relationship'] == "eBGP":
+                    if neighbor['filtre'] is True:
+                        config.append(f" neighbor {neighbor['address']} route-map comm in")
+                        config.append(f" neighbor {neighbor['address']} route-map filtre out")
+                    else:
+                        config.append(f" neighbor {neighbor['address']} route-map comm in")         
+        else:
+            for neighbor in router['bgp']['neighbors']:
+                config.append(f" neighbor {neighbor['address']} activate")
+                if neighbor['relationship'] == "iBGP":
+                    config.append(f" neighbor {neighbor['address']} send-community both")
+                if neighbor['relationship'] == "eBGP":
+                    config.append(f" neighbor {neighbor['address']} route-map comm in")
+            
                 
     else:
         for neighbor in router['bgp']['neighbors']:
@@ -180,6 +193,13 @@ def generate_router_config(router):
             config.append("ipv6 router rip RIP")
             config.append(" redistribute connected")
             config.append("!")
+            
+    if "filtres" in router:
+        config.append(f"route-map filtre deny {router['filtres']['deny']}")
+        config.append(f" match community {router['filtres']['match_comm']}")
+        config.append("!")
+        config.append("route-map filtre permit 30")
+        config.append("!")
             
     if "border_comm" in router:
          config.append(f"route-map comm permit {router['border_comm']['permit']}")
