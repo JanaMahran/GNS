@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 
 import creation_projet_noeuds_liens
-import creation_configs
+import creation_configs_20_routers
 import drag_and_drop_bot
 import os
 
 #Définition de tous les chemins dont on aura besoin :
-INTENT_FILE = "project.json"  # Fichier contenant tout ce qu'on veut appliquer à nos routeurs
+INTENT_FILE = "project_20_routers.json"  # Fichier contenant tout ce qu'on veut appliquer à nos routeurs
 CONFIG_SOURCE_DIR = os.path.join(os.getcwd(), "config")  # Dossier où les fichiers .cfg sont générés
 GNS3_PROJECTS_DIR = r"C:\Users\msoff\GNS3\projects"  # Dossier où GNS3 stocke ses projets
 
@@ -18,7 +18,7 @@ def main():
         return
     
     print("Génération des fichiers de configuration des routeurs...")
-    creation_configs.main(INTENT_FILE, CONFIG_SOURCE_DIR)
+    creation_configs_20_routers.main(INTENT_FILE, CONFIG_SOURCE_DIR)
 
     print("Déplacement des fichiers de configuration via un drag and drop bot...")
     project_path = os.path.join(GNS3_PROJECTS_DIR, str(project_id))

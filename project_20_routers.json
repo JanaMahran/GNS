@@ -1,0 +1,856 @@
+{
+    "routers":
+    [
+            {
+            "name": "R1",
+            "coord_x": -100, "coord_y": -100,
+            "interfaces": [
+                {"name": "Loopback0", "address": "2001:100:1::1/128", "protocol":"rip"},
+                {"name": "FastEthernet0/0", "address": "2001:100:1:13::1/64", "protocol":false},
+                {"name": "GigabitEthernet1/0", "address": "2001:100:1:5::2/64", "protocol":"rip"},
+                {"name": "GigabitEthernet2/0", "address": "2001:100:1:8::2/64", "protocol":"rip"},
+                {"name": "GigabitEthernet3/0", "address": false, "protocol": false}     
+            ],
+            "as": "1",
+            "igp": "RIP",
+            "bgp": {
+                "local_as": "1",
+                "router_id": "1.1.1.1",
+                "border_interface":"FastEthernet0/0",
+    
+                "neighbors": [
+                    {"address": "2001:100:1:13::2", "remote_as": "2", "relationship": "eBGP", "send_community":false, "comm_in":false},
+                    {"address": "2001:100:1::2", "remote_as": "1", "relationship": "iBGP", "send_community":false, "comm_in":false},
+                    {"address": "2001:100:1::3", "remote_as": "1", "relationship": "iBGP", "send_community":false, "comm_in":false},
+                    {"address": "2001:100:1::4", "remote_as": "1", "relationship": "iBGP", "send_community":false, "comm_in":false},
+                    {"address": "2001:100:1::5", "remote_as": "1", "relationship": "iBGP", "send_community":true, "comm_in":true},
+                    {"address": "2001:100:1::6", "remote_as": "1", "relationship": "iBGP", "send_community":true, "comm_in":true},
+                    {"address": "2001:100:1::7", "remote_as": "1", "relationship": "iBGP", "send_community":false, "comm_in":false}
+                    ]
+            },
+            "border": [
+    
+                { "network": "2001:100:1:13::/64" },
+                { "network": "2001:100:1:5::/64" },
+                { "network": "2001:100:1:7::/64" },
+                { "network": "2001:100:1:8::/64" },
+                { "network": "2001:100:1:6::/64" },
+                { "network": "2001:100:1:4::/64" },
+                { "network": "2001:100:1:10::/64"},
+                { "network": "2001:100:1:2::/64" },
+                { "network": "2001:100:1:1::/64" },
+                { "network": "2001:100:1:3::/64" },
+                { "network": "2001:100:1:9::/64" },
+                { "network": "2001:100:2:13::/64"},
+                { "network": "2001:100:3:13::/64"},
+                { "network": "2001:100:4:13::/64"}
+    
+            ],
+            
+            "border_comm":{
+                "relationship":"client",
+                "local_pref":"150",
+                "permit":"5",
+                "set_comm_add": "1:2"
+            },
+            
+            "communities":[
+                {"community_name":"20" , "permit": "1:3", "local_pref":"100", "relationship":"peer"},
+                {"community_name":"30" , "permit": "1:4", "local_pref":"50", "relationship":"provider"}
+            ]
+    
+        },
+    
+            {
+            "name": "R2",
+            "coord_x": -100, "coord_y": 100,
+            "interfaces": [
+                {"name": "Loopback0", "address": "2001:100:1::2/128", "protocol":"rip"},
+                {"name": "FastEthernet0/0", "address": "2001:100:2:13::1/64", "protocol":false},
+                {"name": "GigabitEthernet1/0", "address": "2001:100:1:7::2/64", "protocol":"rip"},
+                {"name": "GigabitEthernet2/0", "address": "2001:100:1:6::2/64", "protocol":"rip"},
+                {"name": "GigabitEthernet3/0", "address": false, "protocol": false}
+            ],
+            "as": "1",
+            "igp": "RIP",
+            "bgp": {
+                "local_as": "1",
+                "router_id": "2.2.2.2",
+                "border_interface":"FastEthernet0/0",
+                "neighbors": [
+                    {"address": "2001:100:2:13::2", "remote_as": "2", "relationship": "eBGP", "send_community":false},
+                    {"address": "2001:100:1::1", "remote_as": "1", "relationship": "iBGP", "send_community":true},
+                    {"address": "2001:100:1::3", "remote_as": "1", "relationship": "iBGP", "send_community":false},
+                    {"address": "2001:100:1::4", "remote_as": "1", "relationship": "iBGP", "send_community":false},
+                    {"address": "2001:100:1::5", "remote_as": "1", "relationship": "iBGP", "send_community":true},
+                    {"address": "2001:100:1::6", "remote_as": "1", "relationship": "iBGP", "send_community":true},
+                    {"address": "2001:100:1::7", "remote_as": "1", "relationship": "iBGP", "send_community":false}
+    
+                ]
+            },
+            
+            "communities":[
+                {"community_name":"10" , "permit": "1:2", "local_pref":"150", "relationship":"client"},
+                {"community_name":"20" , "permit": "1:3", "local_pref":"100", "relationship":"peer"},
+                {"community_name":"30" , "permit": "1:4", "local_pref":"50", "relationship":"provider"}
+            ],
+            
+            "border": [
+                { "network": "2001:100:1:13::/64" },
+                { "network": "2001:100:1:5::/64" },
+                { "network": "2001:100:1:7::/64" },
+                { "network": "2001:100:1:8::/64" },
+                { "network": "2001:100:1:6::/64" },
+                { "network": "2001:100:1:4::/64" },
+                { "network": "2001:100:1:10::/64"},
+                { "network": "2001:100:1:2::/64" },
+                { "network": "2001:100:1:1::/64" },
+                { "network": "2001:100:1:3::/64" },
+                { "network": "2001:100:1:9::/64" },
+                { "network": "2001:100:2:13::/64"},
+                { "network": "2001:100:3:13::/64"},
+                { "network": "2001:100:4:13::/64"}
+            ]
+        },
+    
+        {
+            "name": "R3",            
+            "coord_x": -300, "coord_y": -200,
+            "interfaces": [
+                {"name": "Loopback0", "address": "2001:100:1::3/128", "protocol":"rip"},
+                {"name": "FastEthernet0/0", "address": "2001:100:1:5::1/64", "protocol":"rip"},
+                {"name": "GigabitEthernet1/0", "address": "2001:100:1:7::1/64", "protocol":"rip"},
+                {"name": "GigabitEthernet2/0", "address": "2001:100:1:10::2/64", "protocol":"rip"},
+                {"name": "GigabitEthernet3/0", "address": "2001:100:1:2::2/64", "protocol":"rip"}
+            ],
+            "as": "1",
+            "igp": "RIP",
+            "bgp": {
+                "local_as": "1",
+                "router_id": "3.3.3.3",
+                "neighbors": [
+                    {"address": "2001:100:1::1", "remote_as": "1", "relationship": "iBGP", "send_community":true},
+                    {"address": "2001:100:1::2", "remote_as": "1", "relationship": "iBGP", "send_community":false},
+                    {"address": "2001:100:1::4", "remote_as": "1", "relationship": "iBGP", "send_community":false},
+                    {"address": "2001:100:1::5", "remote_as": "1", "relationship": "iBGP", "send_community":true},
+                    {"address": "2001:100:1::6", "remote_as": "1", "relationship": "iBGP", "send_community":true},
+                    {"address": "2001:100:1::7", "remote_as": "1", "relationship": "iBGP", "send_community":false}
+                ]
+            },
+            
+            "communities":[
+                {"community_name":"10" , "permit": "1:2", "local_pref":"150", "relationship":"client"},
+                {"community_name":"20" , "permit": "1:3", "local_pref":"100", "relationship":"peer"},
+                {"community_name":"30" , "permit": "1:4", "local_pref":"50", "relationship":"provider"}
+            ]
+        },
+    
+    
+        {
+            "name": "R4",            
+            "coord_x": -300, "coord_y": 200,
+            "interfaces": [
+                {"name": "Loopback0", "address": "2001:100:1::4/128", "protocol":"rip"},
+                {"name": "FastEthernet0/0", "address": "2001:100:1:6::1/64", "protocol":"rip"},
+                {"name": "GigabitEthernet1/0", "address": "2001:100:1:8::1/64", "protocol":"rip"},
+                {"name": "GigabitEthernet2/0", "address": "2001:100:1:10::1/64", "protocol":"rip"},
+                {"name": "GigabitEthernet3/0", "address": "2001:100:1:4::2/64", "protocol":"rip"}
+            ],
+            "as": "1",
+            "igp": "RIP",
+            "bgp": {
+                "local_as": "1",
+                "router_id": "4.4.4.4",
+                "neighbors": [
+                    {"address": "2001:100:1::1", "remote_as": "1", "relationship": "iBGP", "send_community":true},
+                    {"address": "2001:100:1::2", "remote_as": "1", "relationship": "iBGP", "send_community":false},
+                    {"address": "2001:100:1::3", "remote_as": "1", "relationship": "iBGP", "send_community":false},
+                    {"address": "2001:100:1::5", "remote_as": "1", "relationship": "iBGP", "send_community":true},
+                    {"address": "2001:100:1::6", "remote_as": "1", "relationship": "iBGP", "send_community":true},
+                    {"address": "2001:100:1::7", "remote_as": "1", "relationship": "iBGP", "send_community":false}
+    
+                
+                ]
+            },
+            
+            "communities":[
+                {"community_name":"10" , "permit": "1:2", "local_pref":"150", "relationship":"client"},
+                {"community_name":"20" , "permit": "1:3", "local_pref":"100", "relationship":"peer"},
+                {"community_name":"30" , "permit": "1:4", "local_pref":"50", "relationship":"provider"}
+            ]
+        },
+    
+    
+        {
+            "name": "R5",
+            "coord_x": -500, "coord_y": -200,
+            "interfaces": [
+                {"name": "Loopback0", "address": "2001:100:1::5/128", "protocol":"rip"},
+                {"name": "FastEthernet0/0", "address": "2001:100:1:2::1/64", "protocol":"rip"},
+                {"name": "GigabitEthernet1/0", "address": "2001:100:1:9::2/64", "protocol":"rip"},
+                {"name": "GigabitEthernet2/0", "address": "2001:100:1:1::2/64", "protocol":"rip"},
+                {"name": "GigabitEthernet3/0", "address": "2001:100:3:13::2/64", "protocol": false}
+            ],
+            "as": "1",
+            "igp": "RIP",
+            "bgp": {
+                "local_as": "1",
+                "router_id": "5.5.5.5",
+                "border_interface":"GigabitEthernet3/0",
+                "neighbors": [
+                    {"address": "2001:100:1::1", "remote_as": "1", "relationship": "iBGP", "send_community":true, "comm_in":true, "filtre":false},
+                    {"address": "2001:100:1::3", "remote_as": "1", "relationship": "iBGP", "send_community":false, "comm_in":false, "filtre":false},
+                    {"address": "2001:100:1::2", "remote_as": "1", "relationship": "iBGP", "send_community":false, "comm_in":false, "filtre":false},
+                    {"address": "2001:100:1::4", "remote_as": "1", "relationship": "iBGP", "send_community":false, "comm_in":false, "filtre":false},
+                    {"address": "2001:100:1::6", "remote_as": "1", "relationship": "iBGP", "send_community":true, "comm_in":true, "filtre":false},
+                    {"address": "2001:100:1::7", "remote_as": "1", "relationship": "iBGP", "send_community":false, "comm_in":false, "filtre":false},
+                    {"address": "2001:100:3:13::1", "remote_as": "3", "relationship": "eBGP", "send_community":false, "comm_in":false, "filtre":true}
+                    
+                
+                ]
+            },
+            
+            "filtres":{
+                "deny":"10",
+                "match_comm":"30"
+            },
+            "border": [
+    
+                { "network": "2001:100:1:13::/64" },
+                { "network": "2001:100:1:5::/64" },
+                { "network": "2001:100:1:7::/64" },
+                { "network": "2001:100:1:8::/64" },
+                { "network": "2001:100:1:6::/64" },
+                { "network": "2001:100:1:4::/64" },
+                { "network": "2001:100:1:10::/64"},
+                { "network": "2001:100:1:2::/64" },
+                { "network": "2001:100:1:1::/64" },
+                { "network": "2001:100:1:3::/64" },
+                { "network": "2001:100:1:9::/64" },
+                { "network": "2001:100:2:13::/64"},
+                { "network": "2001:100:3:13::/64"},
+                { "network": "2001:100:4:13::/64"}
+                
+    
+            ],
+    
+            "border_comm":{
+                "relationship":"peer",
+                "local_pref":"100",
+                "permit":"5",
+                "set_comm_add": "1:3"
+            },
+            
+            "communities":[
+                {"community_name":"10" , "permit": "1:2", "local_pref":"150", "relationship":"client"},
+                {"community_name":"30" , "permit": "1:4", "local_pref":"50", "relationship":"provider"}
+            ]
+            
+        },
+    
+    
+        {
+            "name": "R6",
+            "coord_x": -500, "coord_y": 200,
+            "interfaces": [
+                {"name": "Loopback0", "address": "2001:100:1::6/128", "protocol":"rip"},
+                {"name": "FastEthernet0/0", "address": "2001:100:1:4::1/64", "protocol":"rip"},
+                {"name": "GigabitEthernet1/0", "address": "2001:100:1:9::1/64", "protocol":"rip"},
+                {"name": "GigabitEthernet2/0", "address": "2001:100:1:3::2/64", "protocol":"rip"},
+                {"name": "GigabitEthernet3/0", "address": "2001:100:4:13::1/64", "protocol": false}
+            ],
+            "as": "1",
+            "igp": "RIP",
+            "bgp": {
+                "local_as": "1",
+                "router_id": "6.6.6.6",
+                "border_interface":"GigabitEthernet3/0",
+                "neighbors": [
+                    {"address": "2001:100:1::1", "remote_as": "1", "relationship": "iBGP", "send_community":true, "comm_in":true, "filtre":false},
+                    {"address": "2001:100:1::2", "remote_as": "1", "relationship": "iBGP", "send_community":false, "comm_in":false, "filtre":false},
+                    {"address": "2001:100:1::3", "remote_as": "1", "relationship": "iBGP", "send_community":false, "comm_in":false, "filtre":false},
+                    {"address": "2001:100:1::4", "remote_as": "1", "relationship": "iBGP", "send_community":false, "comm_in":false, "filtre":false},
+                    {"address": "2001:100:1::5", "remote_as": "1", "relationship": "iBGP", "send_community":true, "comm_in":true, "filtre":false},
+                    {"address": "2001:100:1::7", "remote_as": "1", "relationship": "iBGP", "send_community":false, "comm_in":false, "filtre":false},
+                    {"address": "2001:100:4:13::2", "remote_as": "4", "relationship": "eBGP", "send_community":false, "comm_in":false, "filtre":true}
+    
+                
+                ]
+            },
+            "filtres":{
+                "deny":"10",
+                "match_comm":"20"
+            },
+            "border": [
+    
+                { "network": "2001:100:1:13::/64" },
+                { "network": "2001:100:1:5::/64" },
+                { "network": "2001:100:1:7::/64" },
+                { "network": "2001:100:1:8::/64" },
+                { "network": "2001:100:1:6::/64" },
+                { "network": "2001:100:1:4::/64" },
+                { "network": "2001:100:1:10::/64"},
+                { "network": "2001:100:1:2::/64" },
+                { "network": "2001:100:1:1::/64" },
+                { "network": "2001:100:1:3::/64" },
+                { "network": "2001:100:1:9::/64" },
+                { "network": "2001:100:2:13::/64"},
+                { "network": "2001:100:3:13::/64"},
+                { "network": "2001:100:4:13::/64"}
+                
+    
+            ],
+            "border_comm":{
+                "relationship":"provider",
+                "local_pref":"50",
+                "permit":"5",
+                "set_comm_add": "1:4"
+            },
+            
+            "communities":[
+                {"community_name":"10" , "permit": "1:2", "local_pref":"150", "relationship":"client"},
+                {"community_name":"20" , "permit": "1:3", "local_pref":"100", "relationship":"peer"}
+            ]
+        },
+    
+    
+        {
+            "name": "R7",
+            "coord_x": -700, "coord_y": 0,
+            "interfaces": [
+                {"name": "Loopback0", "address": "2001:100:1::7/128", "protocol":"rip"},
+                {"name": "FastEthernet0/0", "address": "2001:100:1:3::1/64", "protocol":"rip"},
+                {"name": "GigabitEthernet1/0", "address": "2001:100:1:1::1/64", "protocol":"rip"},
+                {"name": "GigabitEthernet2/0", "address": false, "protocol": false},
+                {"name": "GigabitEthernet3/0", "address": false, "protocol": false}
+            ],
+            "as": "1",
+            "igp": "RIP",
+            "bgp": {
+                "local_as": "1",
+                "router_id": "7.7.7.7",
+                "neighbors": [
+                    {"address": "2001:100:1::1", "remote_as": "1", "relationship": "iBGP", "send_community":true},
+                    {"address": "2001:100:1::2", "remote_as": "1", "relationship": "iBGP", "send_community":false},
+                    {"address": "2001:100:1::3", "remote_as": "1", "relationship": "iBGP", "send_community":false},
+                    {"address": "2001:100:1::4", "remote_as": "1", "relationship": "iBGP", "send_community":false},
+                    {"address": "2001:100:1::5", "remote_as": "1", "relationship": "iBGP", "send_community":true},
+                    {"address": "2001:100:1::6", "remote_as": "1", "relationship": "iBGP", "send_community":true}
+    
+                
+                ]
+            },
+            
+            "communities":[
+                {"community_name":"10" , "permit": "1:2", "local_pref":"150", "relationship":"client"},
+                {"community_name":"20" , "permit": "1:3", "local_pref":"100", "relationship":"peer"},
+                {"community_name":"30" , "permit": "1:4", "local_pref":"50", "relationship":"provider"}
+            ]
+        },
+    
+    
+        {
+            "name": "R8",
+            "coord_x": 100, "coord_y": -100,
+            "interfaces": [
+                {"name": "Loopback0", "address": "2001:100:2::8/128", "protocol":"ospf"},
+                {"name": "FastEthernet0/0", "address": "2001:100:1:13::2/64", "protocol":false},
+                {"name": "GigabitEthernet1/0", "address": "2001:100:2:4::1/64", "protocol":"ospf"},
+                {"name": "GigabitEthernet2/0", "address": "2001:100:2:2::1/64", "protocol":"ospf"},
+                {"name": "GigabitEthernet3/0", "address": false, "protocol": false}
+            ],
+            "as": "2",
+            "igp": "OSPF",
+            "ospf_area": "0",
+            "bgp": {
+                "local_as": "2",
+                "router_id": "8.8.8.8",
+                "border_interface":"FastEthernet0/0",
+                "neighbors": [
+                    {"address": "2001:100:2::9", "remote_as": "2", "relationship": "iBGP"},
+                    {"address": "2001:100:2::10", "remote_as": "2", "relationship": "iBGP"},
+                    {"address": "2001:100:2::11", "remote_as": "2", "relationship": "iBGP"},
+                    {"address": "2001:100:2::12", "remote_as": "2", "relationship": "iBGP"},
+                    {"address": "2001:100:2::13", "remote_as": "2", "relationship": "iBGP"},
+                    {"address": "2001:100:2::14", "remote_as": "2", "relationship": "iBGP"},
+                    {"address": "2001:100:1:13::1","remote_as": "1" , "relationship": "eBGP"}
+                ]
+            },
+            "border": [
+                { "network": "2001:100:1:13::/64" },
+                { "network": "2001:100:2:13::/64"},
+                { "network": "2001:100:2:5::/64" },
+                { "network": "2001:100:2:7::/64" },
+                { "network": "2001:100:2:8::/64" },
+                { "network": "2001:100:2:6::/64" },
+                { "network": "2001:100:2:4::/64" },
+                { "network": "2001:100:2:10::/64"},
+                { "network": "2001:100:2:2::/64" },
+                { "network": "2001:100:2:1::/64" },
+                { "network": "2001:100:2:3::/64" },
+                { "network": "2001:100:2:9::/64" }
+            ]
+        },
+    
+    
+        {
+            "name": "R9",
+            "coord_x": 100, "coord_y": 100,
+            "interfaces": [
+                {"name": "Loopback0", "address": "2001:100:2::9/128", "protocol":"ospf"},
+                {"name": "FastEthernet0/0", "address": "2001:100:2:13::2/64", "protocol":false},
+                {"name": "GigabitEthernet1/0", "address": "2001:100:2:1::1/64", "protocol":"ospf"},
+                {"name": "GigabitEthernet2/0", "address": "2001:100:2:3::1/64", "protocol":"ospf"},
+                {"name": "GigabitEthernet3/0", "address": false, "protocol": false}
+            ],
+            "as": "2",
+            "igp": "OSPF",
+            "ospf_area": "0",
+            "bgp": {
+                "local_as": "2",
+                "router_id": "9.9.9.9",
+                "border_interface":"FastEthernet0/0",
+                "neighbors": [
+                    {"address": "2001:100:2::8", "remote_as": "2", "relationship": "iBGP"},
+                    {"address": "2001:100:2::10", "remote_as": "2", "relationship": "iBGP"},
+                    {"address": "2001:100:2::11", "remote_as": "2", "relationship": "iBGP"},
+                    {"address": "2001:100:2::12", "remote_as": "2", "relationship": "iBGP"},
+                    {"address": "2001:100:2::13", "remote_as": "2", "relationship": "iBGP"},
+                    {"address": "2001:100:2::14", "remote_as": "2", "relationship": "iBGP"},
+                    {"address": "2001:100:2:13::1","remote_as": "1" , "relationship": "eBGP"}
+                ]
+            },
+            "border": [
+                { "network": "2001:100:1:13::/64" },
+                { "network": "2001:100:2:13::/64"},
+                { "network": "2001:100:2:5::/64" },
+                { "network": "2001:100:2:7::/64" },
+                { "network": "2001:100:2:8::/64" },
+                { "network": "2001:100:2:6::/64" },
+                { "network": "2001:100:2:4::/64" },
+                { "network": "2001:100:2:10::/64"},
+                { "network": "2001:100:2:2::/64" },
+                { "network": "2001:100:2:1::/64" },
+                { "network": "2001:100:2:3::/64" },
+                { "network": "2001:100:2:9::/64" }
+            ]
+        },
+    
+    
+        {
+            "name": "R10",
+            "coord_x": 300, "coord_y": 200,
+            "interfaces": [
+                {"name": "Loopback0", "address": "2001:100:2::10/128", "protocol":"ospf"},
+                {"name": "FastEthernet0/0", "address": "2001:100:2:1::2/64", "protocol":"ospf"},
+                {"name": "GigabitEthernet1/0", "address": "2001:100:2:4::2/64", "protocol":"ospf"},
+                {"name": "GigabitEthernet2/0", "address": "2001:100:2:9::2/64", "protocol":"ospf"},
+                {"name": "GigabitEthernet3/0", "address": "2001:100:2:6::1/64", "protocol":"ospf"}
+            ],
+            "as": "2",
+            "igp": "OSPF",
+            "bgp": {
+                "local_as": "2",
+                "router_id": "10.10.10.10",
+                "neighbors": [
+                    {"address": "2001:100:2::8", "remote_as": "2", "relationship": "iBGP"},
+                    {"address": "2001:100:2::9", "remote_as": "2", "relationship": "iBGP"},
+                    {"address": "2001:100:2::11", "remote_as": "2", "relationship": "iBGP"},
+                    {"address": "2001:100:2::12", "remote_as": "2", "relationship": "iBGP"},
+                    {"address": "2001:100:2::13", "remote_as": "2", "relationship": "iBGP"},
+                    {"address": "2001:100:2::14", "remote_as": "2", "relationship": "iBGP"}
+                ]
+            }
+        },
+        {
+            "name": "R11",
+            "coord_x": 300, "coord_y": -200,
+            "interfaces": [
+                {"name": "Loopback0", "address": "2001:100:2::11/128", "protocol":"ospf"},
+                {"name": "FastEthernet0/0", "address": "2001:100:2:2::2/64", "protocol":"ospf"},
+                {"name": "GigabitEthernet1/0", "address": "2001:100:2:3::2/64", "protocol":"ospf"},
+                {"name": "GigabitEthernet2/0", "address": "2001:100:2:9::1/64", "protocol":"ospf"},
+                {"name": "GigabitEthernet3/0", "address": "2001:100:2:5::1/64", "protocol":"ospf"}
+            ],
+            "as": "2",
+            "igp": "OSPF",
+            "ospf_area": "0",
+            "bgp": {
+                "local_as": "2",
+                "router_id": "11.11.11.11",
+                "neighbors": [
+                    {"address": "2001:100:2::9", "remote_as": "2", "relationship": "iBGP"},
+                    {"address": "2001:100:2::10", "remote_as": "2", "relationship": "iBGP"},
+                    {"address": "2001:100:2::8", "remote_as": "2", "relationship": "iBGP"},
+                    {"address": "2001:100:2::12", "remote_as": "2", "relationship": "iBGP"},
+                    {"address": "2001:100:2::13", "remote_as": "2", "relationship": "iBGP"},
+                    {"address": "2001:100:2::14", "remote_as": "2", "relationship": "iBGP"}
+    
+                ]
+            }
+    
+        },
+    
+        {
+            "name": "R12",
+            "coord_x": 500, "coord_y": -200,
+            "interfaces": [
+                {"name": "Loopback0", "address": "2001:100:2::12/128", "protocol":"ospf"},
+                {"name": "FastEthernet0/0", "address": "2001:100:2:5::2/64", "protocol":"ospf"},
+                {"name": "GigabitEthernet1/0", "address": "2001:100:2:10::1/64", "protocol":"ospf"},
+                {"name": "GigabitEthernet2/0", "address": "2001:100:2:7::1/64", "protocol":"ospf"},
+                {"name": "GigabitEthernet3/0", "address": false, "protocol": false}
+            ],
+            "as": "2",
+            "igp": "OSPF",
+            "ospf_area": "0",
+            "bgp": {
+                "local_as": "2",
+                "router_id": "12.12.12.12",
+                "neighbors": [
+                    {"address": "2001:100:2::9", "remote_as": "2", "relationship": "iBGP"},
+                    {"address": "2001:100:2::10", "remote_as": "2", "relationship": "iBGP"},
+                    {"address": "2001:100:2::11", "remote_as": "2", "relationship": "iBGP"},
+                    {"address": "2001:100:2::8", "remote_as": "2", "relationship": "iBGP"},
+                    {"address": "2001:100:2::13", "remote_as": "2", "relationship": "iBGP"},
+                    {"address": "2001:100:2::14", "remote_as": "2", "relationship": "iBGP"}
+                ]
+            }
+    
+        },
+    
+        {
+            "name": "R13",
+            "coord_x": 700, "coord_y": 0,
+            "interfaces": [
+                {"name": "Loopback0", "address": "2001:100:2::13/128", "protocol":"ospf"},
+                {"name": "FastEthernet0/0", "address": "2001:100:2:7::2/64", "protocol":"ospf"},
+                {"name": "GigabitEthernet1/0", "address": "2001:100:2:8::2/64", "protocol":"ospf"},
+                {"name": "GigabitEthernet2/0", "address": false, "protocol": false},
+                {"name": "GigabitEthernet3/0", "address": false, "protocol": false}
+            ],
+            "as": "2",
+            "igp": "OSPF",
+            "ospf_area": "0",
+            "bgp": {
+                "local_as": "2",
+                "router_id": "13.13.13.13",
+                "neighbors": [
+                    {"address": "2001:100:2::9", "remote_as": "2", "relationship": "iBGP"},
+                    {"address": "2001:100:2::10", "remote_as": "2", "relationship": "iBGP"},
+                    {"address": "2001:100:2::11", "remote_as": "2", "relationship": "iBGP"},
+                    {"address": "2001:100:2::12", "remote_as": "2", "relationship": "iBGP"},
+                    {"address": "2001:100:2::8", "remote_as": "2", "relationship": "iBGP"},
+                    {"address": "2001:100:2::14", "remote_as": "2", "relationship": "iBGP"}
+                ]
+            }
+    
+            },
+    
+        {
+            "name": "R14",
+            "coord_x": 500, "coord_y": 200,
+            "interfaces": [
+                {"name": "Loopback0", "address": "2001:100:2::14/128", "protocol":"ospf"},
+                {"name": "FastEthernet0/0", "address": "2001:100:2:6::2/64", "protocol":"ospf"},
+                {"name": "GigabitEthernet1/0", "address": "2001:100:2:10::2/64", "protocol":"ospf"},
+                {"name": "GigabitEthernet2/0", "address": "2001:100:2:8::1/64", "protocol":"ospf"},
+                {"name": "GigabitEthernet3/0", "address": false, "protocol": false}
+            ],
+            "as": "2",
+            "igp": "OSPF",
+            "ospf_area": "0",
+            "bgp": {
+                "local_as": "2",
+                "router_id": "14.14.14.14",
+                "neighbors": [
+                    {"address": "2001:100:2::9", "remote_as": "2", "relationship": "iBGP"},
+                    {"address": "2001:100:2::10", "remote_as": "2", "relationship": "iBGP"},
+                    {"address": "2001:100:2::11", "remote_as": "2", "relationship": "iBGP"},
+                    {"address": "2001:100:2::12", "remote_as": "2", "relationship": "iBGP"},
+                    {"address": "2001:100:2::13", "remote_as": "2", "relationship": "iBGP"},
+                    {"address": "2001:100:2::8", "remote_as": "2", "relationship": "iBGP"}
+                ]
+            }
+    
+        },
+        
+        {
+            "name": "R15",
+            "coord_x": -700, "coord_y": -500,
+            "interfaces": [
+                {"name": "Loopback0", "address": "2001:100:3::15/128", "protocol":"ospf"},
+                {"name": "FastEthernet0/0", "address": "2001:100:3:13::1/64", "protocol":false},
+                {"name": "GigabitEthernet1/0", "address": "2001:100:3:3::2/64", "protocol":"ospf"},
+                {"name": "GigabitEthernet2/0", "address": "2001:100:3:1::1/64", "protocol":"ospf"},
+                {"name": "GigabitEthernet3/0", "address": false, "protocol": false}
+            ],
+            "as": "3",
+            "igp": "OSPF",
+            "ospf_area": "0",
+            "bgp": {
+                "local_as": "3",
+                "router_id": "15.15.15.15",
+                "border_interface":"FastEthernet0/0",
+                "neighbors": [
+                    {"address": "2001:100:3::16", "remote_as": "3", "relationship": "iBGP"},
+                    {"address": "2001:100:3::17", "remote_as": "3", "relationship": "iBGP"},
+                    {"address": "2001:100:3:13::2", "remote_as": "1", "relationship": "eBGP"}
+                ]
+            },
+            "border": [
+                { "network": "2001:100:3:13::/64" },
+                { "network": "2001:100:3:1::/64"},
+                { "network": "2001:100:3:2::/64" },
+                { "network": "2001:100:3:3::/64" }
+            ]
+    
+            
+        },
+        {
+            "name": "R16",
+            "coord_x": -500, "coord_y": -700,
+            "interfaces": [
+                {"name": "Loopback0", "address": "2001:100:3::16/128", "protocol":"ospf"},
+                {"name": "FastEthernet0/0", "address": "2001:100:3:1::2/64", "protocol":"ospf"},
+                {"name": "GigabitEthernet1/0", "address": "2001:100:3:2::2/64", "protocol":"ospf"},
+                {"name": "GigabitEthernet2/0", "address": false, "protocol":false},
+                {"name": "GigabitEthernet3/0", "address": false, "protocol":false}
+            ],
+            "as": "3",
+            "igp": "OSPF",
+            "bgp": {
+                "local_as": "3",
+                "router_id": "16.16.16.16",
+                "neighbors": [
+                    {"address": "2001:100:3::15", "remote_as": "3", "relationship": "iBGP"},
+                    {"address": "2001:100:3::17", "remote_as": "3", "relationship": "iBGP"}
+                ]
+            }
+        },
+        {
+            "name": "R17",
+            "coord_x": -900, "coord_y": -700,
+            "interfaces": [
+                {"name": "Loopback0", "address": "2001:100:3::17/128", "protocol":"ospf"},
+                {"name": "FastEthernet0/0", "address": "2001:100:3:3::1/64", "protocol":"ospf"},
+                {"name": "GigabitEthernet1/0", "address": "2001:100:3:2::1/64", "protocol":"ospf"},
+                {"name": "GigabitEthernet2/0", "address": false, "protocol":false},
+                {"name": "GigabitEthernet3/0", "address": false, "protocol":false}
+            ],
+            "as": "3",
+            "igp": "OSPF",
+            "bgp": {
+                "local_as": "3",
+                "router_id": "17.17.17.17",
+                "neighbors": [
+                    {"address": "2001:100:3::15", "remote_as": "3", "relationship": "iBGP"},
+                    {"address": "2001:100:3::16", "remote_as": "3", "relationship": "iBGP"}
+                ]
+            }
+        },
+        {
+            "name": "R18",
+            "coord_x": -700, "coord_y": 500,
+            "interfaces": [
+                {"name": "Loopback0", "address": "2001:100:4::18/128", "protocol":"ospf"},
+                {"name": "FastEthernet0/0", "address": "2001:100:4:13::2/64", "protocol":false},
+                {"name": "GigabitEthernet1/0", "address": "2001:100:4:2::1/64", "protocol":"ospf"},
+                {"name": "GigabitEthernet2/0", "address": "2001:100:4:1::1/64", "protocol":"ospf"},
+                {"name": "GigabitEthernet3/0", "address": false, "protocol": false}
+            ],
+            "as": "4",
+            "igp": "OSPF",
+            "ospf_area": "0",
+            "bgp": {
+                "local_as": "4",
+                "router_id": "18.18.18.18",
+                "border_interface":"FastEthernet0/0",
+                "neighbors": [
+                    {"address": "2001:100:4::19", "remote_as": "4", "relationship": "iBGP"},
+                    {"address": "2001:100:4::20", "remote_as": "4", "relationship": "iBGP"},
+                    {"address": "2001:100:4:13::1", "remote_as": "1", "relationship": "eBGP"}
+                ]
+            },
+            "border": [
+                { "network": "2001:100:4:13::/64" },
+                { "network": "2001:100:4:1::/64"},
+                { "network": "2001:100:4:2::/64" },
+                { "network": "2001:100:4:3::/64" }
+            ]
+    
+            
+        },
+        {
+            "name": "R19",
+            "coord_x": -500, "coord_y": 700,
+            "interfaces": [
+                {"name": "Loopback0", "address": "2001:100:4::19/128", "protocol":"ospf"},
+                {"name": "FastEthernet0/0", "address": "2001:100:4:2::2/64", "protocol":"ospf"},
+                {"name": "GigabitEthernet1/0", "address": "2001:100:4:3::2/64", "protocol":"ospf"},
+                {"name": "GigabitEthernet2/0", "address": false, "protocol":false},
+                {"name": "GigabitEthernet3/0", "address": false, "protocol":false}
+            ],
+            "as": "4",
+            "igp": "OSPF",
+            "bgp": {
+                "local_as": "4",
+                "router_id": "19.19.19.19",
+                "neighbors": [
+                    {"address": "2001:100:3::18", "remote_as": "4", "relationship": "iBGP"},
+                    {"address": "2001:100:3::20", "remote_as": "4", "relationship": "iBGP"}
+                ]
+            }
+        },
+        
+        {
+            "name": "R20",
+            "coord_x": -900, "coord_y": 700,
+            "interfaces": [
+                {"name": "Loopback0", "address": "2001:100:4::20/128", "protocol":"ospf"},
+                {"name": "FastEthernet0/0", "address": "2001:100:4:3::1/64", "protocol":"ospf"},
+                {"name": "GigabitEthernet1/0", "address": "2001:100:4:1::2/64", "protocol":"ospf"},
+                {"name": "GigabitEthernet2/0", "address": false, "protocol":false},
+                {"name": "GigabitEthernet3/0", "address": false, "protocol":false}
+            ],
+            "as": "4",
+            "igp": "OSPF",
+            "bgp": {
+                "local_as": "4",
+                "router_id": "20.20.20.20",
+                "neighbors": [
+                    {"address": "2001:100:4::18", "remote_as": "4", "relationship": "iBGP"},
+                    {"address": "2001:100:4::19", "remote_as": "4", "relationship": "iBGP"}
+                ]
+            }
+        }
+        
+        
+        
+    
+    
+    ],
+    "liens": [
+        {
+            "source": {"name": "R1", "adapter": 1, "port": 0}, 
+            "destination": {"name": "R3", "adapter": 0, "port": 0} 
+        },
+        {
+            "source": {"name": "R1", "adapter": 2, "port": 0},
+            "destination": {"name": "R4", "adapter": 1, "port": 0}
+        },
+        {
+            "source": {"name": "R2", "adapter": 1, "port": 0},
+            "destination": {"name": "R3", "adapter": 1, "port": 0}
+        },
+        {
+            "source": {"name": "R2", "adapter": 2, "port": 0},
+            "destination": {"name": "R4", "adapter": 0, "port": 0}
+        },
+        {
+            "source": {"name": "R3", "adapter": 2, "port": 0},
+            "destination": {"name": "R4", "adapter": 2, "port": 0}
+        },
+        {
+            "source": {"name": "R3", "adapter": 3, "port": 0},
+            "destination": {"name": "R5", "adapter": 0, "port": 0}
+        },
+        {
+            "source": {"name": "R4", "adapter": 3, "port": 0},
+            "destination": {"name": "R6", "adapter": 0, "port": 0}
+        },
+        {
+            "source": {"name": "R5", "adapter": 1, "port": 0},
+            "destination": {"name": "R6", "adapter": 1, "port": 0}
+        },
+        {
+            "source": {"name": "R5", "adapter": 2, "port": 0},
+            "destination": {"name": "R7", "adapter": 1, "port": 0}
+        },
+        {
+            "source": {"name": "R6", "adapter": 2, "port": 0},
+            "destination": {"name": "R7", "adapter": 0, "port": 0}
+        },
+        {
+            "source": {"name": "R1", "adapter": 0, "port": 0},
+            "destination": {"name": "R8", "adapter": 0, "port": 0}
+        },
+        {
+            "source": {"name": "R2", "adapter": 0, "port": 0},
+            "destination": {"name": "R9", "adapter": 0, "port": 0}
+        },
+        {
+            "source": {"name": "R8", "adapter": 2, "port": 0},
+            "destination": {"name": "R11", "adapter": 0, "port": 0}
+        },
+        {
+            "source": {"name": "R8", "adapter": 1, "port": 0},
+            "destination": {"name": "R10", "adapter": 1, "port": 0}
+        },
+        {
+            "source": {"name": "R9", "adapter": 2, "port": 0},
+            "destination": {"name": "R11", "adapter": 1, "port": 0}
+        },
+        {
+            "source": {"name": "R9", "adapter": 1, "port": 0},
+            "destination": {"name": "R10", "adapter": 0, "port": 0}
+        },
+        {
+            "source": {"name": "R10", "adapter": 2, "port": 0},
+            "destination": {"name": "R11", "adapter": 2, "port": 0}
+        },
+        {
+            "source": {"name": "R11", "adapter": 3, "port": 0},
+            "destination": {"name": "R12", "adapter": 0, "port": 0}
+        },
+        {
+            "source": {"name": "R10", "adapter": 3, "port": 0},
+            "destination": {"name": "R14", "adapter": 0, "port": 0}
+        },
+        {
+            "source": {"name": "R12", "adapter": 1, "port": 0},
+            "destination": {"name": "R14", "adapter": 1, "port": 0}
+        },
+        {
+            "source": {"name": "R12", "adapter": 2, "port": 0},
+            "destination": {"name": "R13", "adapter": 0, "port": 0}
+        },
+        {
+            "source": {"name": "R14", "adapter": 2, "port": 0},
+            "destination": {"name": "R13", "adapter": 1, "port": 0}
+        },
+        {
+            "source": {"name": "R5", "adapter": 3, "port": 0},
+            "destination": {"name": "R15", "adapter": 0, "port": 0}
+        },
+        {
+            "source": {"name": "R15", "adapter": 2, "port": 0},
+            "destination": {"name": "R16", "adapter": 0, "port": 0}
+        },
+        {
+            "source": {"name": "R15", "adapter": 1, "port": 0},
+            "destination": {"name": "R17", "adapter": 0, "port": 0}
+        },
+        {
+            "source": {"name": "R17", "adapter": 1, "port": 0},
+            "destination": {"name": "R16", "adapter": 1, "port": 0}
+        },
+        {
+            "source": {"name": "R6", "adapter": 3, "port": 0},
+            "destination": {"name": "R18", "adapter": 0, "port": 0}
+        },
+        {
+            "source": {"name": "R18", "adapter": 1, "port": 0},
+            "destination": {"name": "R19", "adapter": 0, "port": 0}
+        },
+        {
+            "source": {"name": "R18", "adapter": 2, "port": 0},
+            "destination": {"name": "R20", "adapter": 1, "port": 0}
+        },
+        {
+            "source": {"name": "R19", "adapter": 1, "port": 0},
+            "destination": {"name": "R20", "adapter": 0, "port": 0}
+        }
+    ]
+}
+    
